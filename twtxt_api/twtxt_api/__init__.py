@@ -49,10 +49,7 @@ def get_all_users():
 
 
 def find_user_url(username):
-    for registry in REGISTRY:
-        url = get_user_url_from_registry(registry, username)
-        if url:
-            return url
+    return get_all_users()[username]
 
 
 def get_all_user_and_url_from_registry(registry_url):
@@ -66,18 +63,6 @@ def get_all_user_and_url_from_registry(registry_url):
             pass
         url_by_username[username] = url
     return url_by_username
-
-
-def get_user_url_from_registry(registry_url, username):
-    """
-    A registry URL is a URL to a file with lines containing a username and a url separated by a space
-
-    """
-    users_list = requests.get(registry_url)
-    for line in users_list.content.decode().split("\n"):
-        username, url = line.split(" ")
-        if username == username:
-            return url
 
 
 def get_twtxts(user_url):
