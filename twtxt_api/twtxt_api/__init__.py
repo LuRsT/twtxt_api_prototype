@@ -33,12 +33,35 @@ def user(username):
     """
     Get a user's twtxts
 
+    Example:
+    {
+        "twtxts": [
+            ....
+            {
+            "datetime": "2020-04-10T12:09:52+0000",
+            "text": "Moving to a tilde -> http://tilde.pt/~gil/twtxt.txt, hopefully it will be easier to manage using one liners instead of a google sheet"
+            },
+            {
+            "datetime": "2020-04-10T22:02:52+0000",
+            "text": "Welcome to twtxt @marado!"
+            }
+        ],
+        "url": "https://tilde.pt/~gil/twtxt.txt",
+        "user": "gil"
+    }
     """
     user_url = find_user_url(username)
 
     user_twtxts = get_twtxts(user_url)
+    # twtxts = [twtxt.split("\t") for twtxt in user_twtxts.split("\n") if not twtxt.startswith("#") and twtxt]
+    twtxts = []
+    for twtxt in user_twtxts.split("\n"):
+        if twtxt.startswith("#") or not twtxt:
+            continue
+        datetime, text = twtxt.split("\t")
+        twtxts.append({"datetime": datetime, "text": text})
 
-    return {"user": username, "twtxts": user_twtxts, "url": user_url}
+    return {"user": username, "twtxts": twtxts, "url": user_url}
 
 
 def get_all_users():
