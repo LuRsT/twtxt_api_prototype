@@ -52,14 +52,7 @@ def user(username):
     """
     user_url = find_user_url(username)
 
-    user_twtxts = get_twtxts(user_url)
-    # twtxts = [twtxt.split("\t") for twtxt in user_twtxts.split("\n") if not twtxt.startswith("#") and twtxt]
-    twtxts = []
-    for twtxt in user_twtxts.split("\n"):
-        if twtxt.startswith("#") or not twtxt:
-            continue
-        datetime, text = twtxt.split("\t")
-        twtxts.append({"datetime": datetime, "text": text})
+    twtxts = get_twtxts(user_url)
 
     return {"user": username, "twtxts": twtxts, "url": user_url}
 
@@ -94,4 +87,18 @@ def get_twtxts(user_url):
 
     """
     request = requests.get(user_url)
-    return request.content.decode()
+    user_twtxts = request.content.decode()
+
+    twtxts = []
+    for twtxt_line in user_twtxts.split("\n"):
+        if twtxt_line.startswith("#") or not twtxt_line:
+            continue
+        if "\t" in twtxt_line:
+            datetime, text = twtxt_line.split("\t")
+            twtxt = {"datetime": datetime, "text": text}
+        else:
+            last_twtxt = twtxts.pop()
+            last_twtxt["text"] += text
+            twtxt = last_twtxt
+        twtxts.append(twtxt)
+    return twtxts
