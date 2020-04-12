@@ -8,6 +8,7 @@ authors = ["Gil Gonçalves <lursty@gmail.com>"]
 python = "^3.8"
 flask = "^1.1.2"
 requests = "^2.23.0"
+flask-cors = "^3.0.8"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"

@@ -1,10 +1,15 @@
 __version__ = "0.1.0"
 
-from flask import Flask, render_template
-import requests
 import os
 
+import requests
+from flask import Flask, render_template
+from flask_cors import CORS, cross_origin
+
+
 app = Flask(__name__)
+cors = CORS(app)
+app.config["CORS_HEADERS"] = "Content-Type"
 
 REGISTRY = [
     "https://raw.githubusercontent.com/mdom/we-are-twtxt/master/we-are-twtxt.txt",
@@ -24,9 +29,11 @@ def index():
     Index page explaining what this API is
 
     """
-    return render_template('index.html', limit=TWTXT_LIMIT, hostname=HOSTNAME)
+    return render_template("index.html", limit=TWTXT_LIMIT, hostname=HOSTNAME)
+
 
 @app.route("/registries")
+@cross_origin()
 def registry():
     """
     List of registries in this API, hardcoded
@@ -36,6 +43,7 @@ def registry():
 
 
 @app.route("/users")
+@cross_origin()
 def users():
     """
     Get all users
@@ -45,6 +53,7 @@ def users():
 
 
 @app.route("/users/<string:username>")
+@cross_origin()
 def user(username):
     """
     Get a user's twtxts
