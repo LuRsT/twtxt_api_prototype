@@ -10,6 +10,8 @@ REGISTRY = [
     "https://raw.githubusercontent.com/mdom/we-are-twtxt/master/we-are-twtxt.txt",
 ]
 
+TWTXT_LIMIT = 200
+
 if os.environ.get("FLASK_ENV") == "development":
     HOSTNAME = "http://localhost:5000"
 else:
@@ -73,7 +75,9 @@ def get_all_users():
 def get_users_by_api_url():
     all_users = get_all_users()
     user_url = HOSTNAME + "/user/{}"
-    users_by_user_api_url = { username: user_url.format(username) for username in all_users }
+    users_by_user_api_url = {
+        username: user_url.format(username) for username in all_users
+    }
     return users_by_user_api_url
 
 
@@ -103,15 +107,23 @@ def get_twtxts(user_url):
     user_twtxts = request.content.decode()
 
     twtxts = []
-    for twtxt_line in user_twtxts.split("\n"):
+    twtxts_list = user_twtxts.split("\n")
+    for twtxt_line in twtxts_list[-TWTXT_LIMIT:]:
         if twtxt_line.startswith("#") or not twtxt_line:
             continue
         if "\t" in twtxt_line:
+            # A usual line starting with a datetime is a twtxt
             datetime, text = twtxt_line.split("\t")
             twtxt = {"datetime": datetime, "text": text}
         else:
+            # Continue to add to the last_twtxt from a line not starting from a datetime
+            if not twtxts:
+                # If we cut from a half-formed twtxt, we ignore the line
+                continue
+
             last_twtxt = twtxts.pop()
             last_twtxt["text"] += text
             twtxt = last_twtxt
+
         twtxts.append(twtxt)
     return twtxts
