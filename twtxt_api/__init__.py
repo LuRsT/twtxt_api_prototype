@@ -1,6 +1,6 @@
 __version__ = "0.1.0"
 
-from flask import Flask
+from flask import Flask, render_template
 import requests
 import os
 
@@ -17,6 +17,14 @@ if os.environ.get("FLASK_ENV") == "development":
 else:
     HOSTNAME = "https://twtxt-api-prototype.herokuapp.com"
 
+
+@app.route("/")
+def index():
+    """
+    Index page explaining what this API is
+
+    """
+    return render_template('index.html', limit=TWTXT_LIMIT, hostname=HOSTNAME)
 
 @app.route("/registry")
 def registry():

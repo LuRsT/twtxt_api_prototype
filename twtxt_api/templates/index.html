@@ -1,0 +1,73 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Twtxt API</title>
+    <meta charset="utf-8">
+<style>
+    body {
+        color: #111;
+        font-family: "Anonymous Pro", Courier, monospace;
+        font-size: 2em;
+    }
+</style>
+  </head>
+  <body>
+    <h1>Twtxt API</h1>
+
+    <p>This is a simple API for twtxt.</p>
+
+    <p>Endpoints:</p>
+    <ul>
+        <li>
+            <p>
+                <a href="{{ hostname }}/registry"><pre>/registry</pre></a>
+                The list of registries used by this API (hardcoded).
+            </p>
+
+            <p>Example output:</p>
+            <pre>
+            {
+                "registry": [
+                    "https://raw.githubusercontent.com/mdom/we-are-twtxt/master/we-are-twtxt.txt"
+                ]
+            }
+            </pre>
+        </li>
+        <li>
+            <p>
+                <a href="{{ hostname }}/user"><pre>/user</pre></a>
+                The usernames from the registries and thei API url.
+            </p>
+
+            <p>Example output:</p>
+            <pre>
+                {
+                "users": {
+                    "gil": "http://localhost:5000/user/gil",
+                    }
+                }
+            </pre>
+        </li>
+        <li>
+            <p>
+                <a href="{{ hostname }}/user/gil"><pre>/user/gil</pre></a>
+                The twtxts from a user, limited to {{ limit }}.
+            </p>
+
+            <p>Example output:</p>
+            <pre>
+            {
+                "twtxts": [
+                    {
+                        "datetime": "2020-04-10T22:02:52+0000",
+                        "text": "Hello World"
+                    }
+                ],
+                "url": "https://tilde.pt/~gil/twtxt.txt",
+                "user": "gil"
+            }
+            </pre>
+        </li>
+    </ul>
+  </body>
+</html>
