@@ -26,7 +26,7 @@ def index():
     """
     return render_template('index.html', limit=TWTXT_LIMIT, hostname=HOSTNAME)
 
-@app.route("/registry")
+@app.route("/registries")
 def registry():
     """
     List of registries in this API, hardcoded
@@ -35,7 +35,7 @@ def registry():
     return {"registry": REGISTRY}
 
 
-@app.route("/user")
+@app.route("/users")
 def users():
     """
     Get all users
@@ -44,7 +44,7 @@ def users():
     return {"users": get_users_by_api_url()}
 
 
-@app.route("/user/<string:username>")
+@app.route("/users/<string:username>")
 def user(username):
     """
     Get a user's twtxts
