@@ -32,16 +32,6 @@ def index():
     return render_template("index.html", limit=TWTXT_LIMIT, hostname=HOSTNAME)
 
 
-@app.route("/registries")
-@cross_origin()
-def registry():
-    """
-    List of registries in this API, hardcoded
-
-    """
-    return {"registry": REGISTRY}
-
-
 @app.route("/users")
 @cross_origin()
 def users():
