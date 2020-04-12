@@ -82,7 +82,7 @@ def get_all_users():
 
 def get_users_by_api_url():
     all_users = get_all_users()
-    user_url = HOSTNAME + "/user/{}"
+    user_url = HOSTNAME + "/users/{}"
     users_by_user_api_url = {
         username: user_url.format(username) for username in all_users
     }
