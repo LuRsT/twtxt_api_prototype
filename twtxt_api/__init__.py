@@ -2,12 +2,18 @@ __version__ = "0.1.0"
 
 from flask import Flask
 import requests
+import os
 
 app = Flask(__name__)
 
 REGISTRY = [
     "https://raw.githubusercontent.com/mdom/we-are-twtxt/master/we-are-twtxt.txt",
 ]
+
+if os.environ.get("FLASK_ENV") == "development":
+    HOSTNAME = "http://localhost:5000"
+else:
+    HOSTNAME = "https://twtxt-api-prototype.herokuapp.com"
 
 
 @app.route("/registry")
@@ -25,7 +31,7 @@ def users():
     Get all users
 
     """
-    return get_all_users()
+    return {"users": get_users_by_api_url()}
 
 
 @app.route("/user/<string:username>")
@@ -62,6 +68,13 @@ def get_all_users():
     for registry in REGISTRY:
         all_users.update(get_all_user_and_url_from_registry(registry))
     return all_users
+
+
+def get_users_by_api_url():
+    all_users = get_all_users()
+    user_url = HOSTNAME + "/user/{}"
+    users_by_user_api_url = { username: user_url.format(username) for username in all_users }
+    return users_by_user_api_url
 
 
 def find_user_url(username):
