@@ -3,9 +3,9 @@ __version__ = "0.1.0"
 import os
 
 import requests
+
 from flask import Flask, render_template
 from flask_cors import CORS, cross_origin
-
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -80,12 +80,11 @@ def get_all_users():
 
 
 def get_users_by_api_url():
-    all_users = get_all_users()
     user_url = HOSTNAME + "/users/{}"
-    users_by_user_api_url = {
-        username: user_url.format(username) for username in all_users
-    }
-    return users_by_user_api_url
+    users = []
+    for username in get_all_users():
+        users.append({"username": username, "url": user_url.format(username)})
+    return users
 
 
 def find_user_url(username):
