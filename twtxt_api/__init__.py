@@ -102,6 +102,7 @@ def find_user_url(username):
 
 
 def get_all_user_and_url_from_registry(registry_url):
+    app.logger.info("Fetching registry url...")
     users_list = requests.get(registry_url)
     url_by_username = {}
     for line in users_list.content.decode().split("\n"):
@@ -120,6 +121,7 @@ def get_twtxts(user_url):
     A user url contains a list of twtxts
 
     """
+    app.logger.info(f"Fetching {user_url}...")
     request = requests.get(user_url)
     user_twtxts = request.content.decode()
 
