@@ -5,11 +5,19 @@ import os
 import requests
 
 from flask import Flask, render_template
+from flask_caching import Cache
 from flask_cors import CORS, cross_origin
 
+config = {
+    "CACHE_TYPE": "simple",
+    "CACHE_DEFAULT_TIMEOUT": 300,
+    "CORS_HEADERS": "Content-Type",
+}
 app = Flask(__name__)
+app.config.from_mapping(config)
 cors = CORS(app)
-app.config["CORS_HEADERS"] = "Content-Type"
+cache = Cache(app)
+
 
 REGISTRY = [
     "https://raw.githubusercontent.com/mdom/we-are-twtxt/master/we-are-twtxt.txt",
@@ -24,6 +32,7 @@ else:
 
 
 @app.route("/")
+@cache.cached(timeout=180)
 def index():
     """
     Index page explaining what this API is
@@ -72,6 +81,7 @@ def user(username):
     return {"user": username, "twtxts": twtxts, "url": user_url}
 
 
+@cache.memoize(timeout=60)
 def get_all_users():
     all_users = {}
     for registry in REGISTRY:
@@ -104,6 +114,7 @@ def get_all_user_and_url_from_registry(registry_url):
     return url_by_username
 
 
+@cache.memoize(timeout=60)
 def get_twtxts(user_url):
     """
     A user url contains a list of twtxts
@@ -117,6 +128,7 @@ def get_twtxts(user_url):
     for twtxt_line in twtxts_list[-TWTXT_LIMIT:]:
         if twtxt_line.startswith("#") or not twtxt_line:
             continue
+
         if "\t" in twtxt_line:
             # A usual line starting with a datetime is a twtxt
             datetime, text = twtxt_line.split("\t")
