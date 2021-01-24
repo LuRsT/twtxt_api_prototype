@@ -135,7 +135,7 @@ def get_twtxts(user_url):
         if "\t" in twtxt_line:
             # A usual line starting with a datetime is a twtxt
             datetime, text = twtxt_line.split("\t")
-            twtxt = {"datetime": datetime, "text": text}
+            twtxt = {"datetime": datetime, "text": format_twtxt(text)}
         else:
             # Continue to add to the last_twtxt from a line not starting from a datetime
             if not twtxts:
@@ -143,7 +143,7 @@ def get_twtxts(user_url):
                 continue
 
             last_twtxt = twtxts.pop()
-            last_twtxt["text"] += text
+            last_twtxt["text"] += format_twtxt(text)
             twtxt = last_twtxt
 
         twtxts.append(twtxt)
