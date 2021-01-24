@@ -1,6 +1,7 @@
 __version__ = "0.1.0"
 
 import os
+import re
 
 import requests
 
@@ -147,3 +148,16 @@ def get_twtxts(user_url):
 
         twtxts.append(twtxt)
     return twtxts
+
+def format_twtxt(twtxt):
+    # From: https://stackoverflow.com/questions/3809401/what-is-a-good-regular-expression-to-match-a-url
+    url_regex = r"(https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*))"
+    username_regex = r"@<([a-zA-Z0-9]+) " + url_regex + r">"
+    pure_url_regex = r'[^"]' + url_regex + r'[^"]'
+
+    twtxt = re.sub(username_regex, r'<a href="\2" target="_blank">@\1</a>', twtxt)
+
+    # Add links to urls
+    twtxt = re.sub(pure_url_regex, r' <a href="\1" target="_blank">\1</a> ', twtxt)
+
+    return twtxt
