@@ -5,7 +5,7 @@ import re
 
 import requests
 
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify
 from flask_caching import Cache
 from flask_cors import CORS, cross_origin
 
@@ -49,7 +49,7 @@ def users():
     Get all users
 
     """
-    return {"users": get_users_by_api_url()}
+    return jsonify({"users": get_users_by_api_url()})
 
 
 @app.route("/users/<string:username>")
@@ -79,7 +79,7 @@ def user(username):
 
     twtxts = get_twtxts(user_url)
 
-    return {"user": username, "twtxts": twtxts, "url": user_url}
+    return jsonify({"user": username, "twtxts": twtxts, "url": user_url})
 
 
 @cache.memoize(timeout=60)
